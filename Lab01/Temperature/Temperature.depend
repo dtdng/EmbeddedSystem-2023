@@ -1,0 +1,4 @@
+# depslib dependency file v1.0
+1684995257 source:d:\code\embed\temperature\ds18b20.c
+	<mcs51/8052.h>
+

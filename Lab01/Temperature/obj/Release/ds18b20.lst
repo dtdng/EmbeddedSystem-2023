@@ -1,0 +1,601 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 4.2.0 #13081 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module ds18b20
+                                      6 	.optsdcc -mmcs51 --model-small
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _ReadTemperature
+                                     12 	.globl _WriteByteToScratchpad
+                                     13 	.globl _ReadByteFromScratchpad
+                                     14 	.globl _Init_DS18B20
+                                     15 	.globl _delay_us_DS18B20
+                                     16 	.globl _delay_ms
+                                     17 	.globl _TF2
+                                     18 	.globl _EXF2
+                                     19 	.globl _RCLK
+                                     20 	.globl _TCLK
+                                     21 	.globl _EXEN2
+                                     22 	.globl _TR2
+                                     23 	.globl _C_T2
+                                     24 	.globl _CP_RL2
+                                     25 	.globl _T2CON_7
+                                     26 	.globl _T2CON_6
+                                     27 	.globl _T2CON_5
+                                     28 	.globl _T2CON_4
+                                     29 	.globl _T2CON_3
+                                     30 	.globl _T2CON_2
+                                     31 	.globl _T2CON_1
+                                     32 	.globl _T2CON_0
+                                     33 	.globl _PT2
+                                     34 	.globl _ET2
+                                     35 	.globl _CY
+                                     36 	.globl _AC
+                                     37 	.globl _F0
+                                     38 	.globl _RS1
+                                     39 	.globl _RS0
+                                     40 	.globl _OV
+                                     41 	.globl _F1
+                                     42 	.globl _P
+                                     43 	.globl _PS
+                                     44 	.globl _PT1
+                                     45 	.globl _PX1
+                                     46 	.globl _PT0
+                                     47 	.globl _PX0
+                                     48 	.globl _RD
+                                     49 	.globl _WR
+                                     50 	.globl _T1
+                                     51 	.globl _T0
+                                     52 	.globl _INT1
+                                     53 	.globl _INT0
+                                     54 	.globl _TXD
+                                     55 	.globl _RXD
+                                     56 	.globl _P3_7
+                                     57 	.globl _P3_6
+                                     58 	.globl _P3_5
+                                     59 	.globl _P3_4
+                                     60 	.globl _P3_3
+                                     61 	.globl _P3_2
+                                     62 	.globl _P3_1
+                                     63 	.globl _P3_0
+                                     64 	.globl _EA
+                                     65 	.globl _ES
+                                     66 	.globl _ET1
+                                     67 	.globl _EX1
+                                     68 	.globl _ET0
+                                     69 	.globl _EX0
+                                     70 	.globl _P2_7
+                                     71 	.globl _P2_6
+                                     72 	.globl _P2_5
+                                     73 	.globl _P2_4
+                                     74 	.globl _P2_3
+                                     75 	.globl _P2_2
+                                     76 	.globl _P2_1
+                                     77 	.globl _P2_0
+                                     78 	.globl _SM0
+                                     79 	.globl _SM1
+                                     80 	.globl _SM2
+                                     81 	.globl _REN
+                                     82 	.globl _TB8
+                                     83 	.globl _RB8
+                                     84 	.globl _TI
+                                     85 	.globl _RI
+                                     86 	.globl _P1_7
+                                     87 	.globl _P1_6
+                                     88 	.globl _P1_5
+                                     89 	.globl _P1_4
+                                     90 	.globl _P1_3
+                                     91 	.globl _P1_2
+                                     92 	.globl _P1_1
+                                     93 	.globl _P1_0
+                                     94 	.globl _TF1
+                                     95 	.globl _TR1
+                                     96 	.globl _TF0
+                                     97 	.globl _TR0
+                                     98 	.globl _IE1
+                                     99 	.globl _IT1
+                                    100 	.globl _IE0
+                                    101 	.globl _IT0
+                                    102 	.globl _P0_7
+                                    103 	.globl _P0_6
+                                    104 	.globl _P0_5
+                                    105 	.globl _P0_4
+                                    106 	.globl _P0_3
+                                    107 	.globl _P0_2
+                                    108 	.globl _P0_1
+                                    109 	.globl _P0_0
+                                    110 	.globl _TH2
+                                    111 	.globl _TL2
+                                    112 	.globl _RCAP2H
+                                    113 	.globl _RCAP2L
+                                    114 	.globl _T2CON
+                                    115 	.globl _B
+                                    116 	.globl _ACC
+                                    117 	.globl _PSW
+                                    118 	.globl _IP
+                                    119 	.globl _P3
+                                    120 	.globl _IE
+                                    121 	.globl _P2
+                                    122 	.globl _SBUF
+                                    123 	.globl _SCON
+                                    124 	.globl _P1
+                                    125 	.globl _TH1
+                                    126 	.globl _TH0
+                                    127 	.globl _TL1
+                                    128 	.globl _TL0
+                                    129 	.globl _TMOD
+                                    130 	.globl _TCON
+                                    131 	.globl _PCON
+                                    132 	.globl _DPH
+                                    133 	.globl _DPL
+                                    134 	.globl _SP
+                                    135 	.globl _P0
+                                    136 ;--------------------------------------------------------
+                                    137 ; special function registers
+                                    138 ;--------------------------------------------------------
+                                    139 	.area RSEG    (ABS,DATA)
+      000000                        140 	.org 0x0000
+                           000080   141 _P0	=	0x0080
+                           000081   142 _SP	=	0x0081
+                           000082   143 _DPL	=	0x0082
+                           000083   144 _DPH	=	0x0083
+                           000087   145 _PCON	=	0x0087
+                           000088   146 _TCON	=	0x0088
+                           000089   147 _TMOD	=	0x0089
+                           00008A   148 _TL0	=	0x008a
+                           00008B   149 _TL1	=	0x008b
+                           00008C   150 _TH0	=	0x008c
+                           00008D   151 _TH1	=	0x008d
+                           000090   152 _P1	=	0x0090
+                           000098   153 _SCON	=	0x0098
+                           000099   154 _SBUF	=	0x0099
+                           0000A0   155 _P2	=	0x00a0
+                           0000A8   156 _IE	=	0x00a8
+                           0000B0   157 _P3	=	0x00b0
+                           0000B8   158 _IP	=	0x00b8
+                           0000D0   159 _PSW	=	0x00d0
+                           0000E0   160 _ACC	=	0x00e0
+                           0000F0   161 _B	=	0x00f0
+                           0000C8   162 _T2CON	=	0x00c8
+                           0000CA   163 _RCAP2L	=	0x00ca
+                           0000CB   164 _RCAP2H	=	0x00cb
+                           0000CC   165 _TL2	=	0x00cc
+                           0000CD   166 _TH2	=	0x00cd
+                                    167 ;--------------------------------------------------------
+                                    168 ; special function bits
+                                    169 ;--------------------------------------------------------
+                                    170 	.area RSEG    (ABS,DATA)
+      000000                        171 	.org 0x0000
+                           000080   172 _P0_0	=	0x0080
+                           000081   173 _P0_1	=	0x0081
+                           000082   174 _P0_2	=	0x0082
+                           000083   175 _P0_3	=	0x0083
+                           000084   176 _P0_4	=	0x0084
+                           000085   177 _P0_5	=	0x0085
+                           000086   178 _P0_6	=	0x0086
+                           000087   179 _P0_7	=	0x0087
+                           000088   180 _IT0	=	0x0088
+                           000089   181 _IE0	=	0x0089
+                           00008A   182 _IT1	=	0x008a
+                           00008B   183 _IE1	=	0x008b
+                           00008C   184 _TR0	=	0x008c
+                           00008D   185 _TF0	=	0x008d
+                           00008E   186 _TR1	=	0x008e
+                           00008F   187 _TF1	=	0x008f
+                           000090   188 _P1_0	=	0x0090
+                           000091   189 _P1_1	=	0x0091
+                           000092   190 _P1_2	=	0x0092
+                           000093   191 _P1_3	=	0x0093
+                           000094   192 _P1_4	=	0x0094
+                           000095   193 _P1_5	=	0x0095
+                           000096   194 _P1_6	=	0x0096
+                           000097   195 _P1_7	=	0x0097
+                           000098   196 _RI	=	0x0098
+                           000099   197 _TI	=	0x0099
+                           00009A   198 _RB8	=	0x009a
+                           00009B   199 _TB8	=	0x009b
+                           00009C   200 _REN	=	0x009c
+                           00009D   201 _SM2	=	0x009d
+                           00009E   202 _SM1	=	0x009e
+                           00009F   203 _SM0	=	0x009f
+                           0000A0   204 _P2_0	=	0x00a0
+                           0000A1   205 _P2_1	=	0x00a1
+                           0000A2   206 _P2_2	=	0x00a2
+                           0000A3   207 _P2_3	=	0x00a3
+                           0000A4   208 _P2_4	=	0x00a4
+                           0000A5   209 _P2_5	=	0x00a5
+                           0000A6   210 _P2_6	=	0x00a6
+                           0000A7   211 _P2_7	=	0x00a7
+                           0000A8   212 _EX0	=	0x00a8
+                           0000A9   213 _ET0	=	0x00a9
+                           0000AA   214 _EX1	=	0x00aa
+                           0000AB   215 _ET1	=	0x00ab
+                           0000AC   216 _ES	=	0x00ac
+                           0000AF   217 _EA	=	0x00af
+                           0000B0   218 _P3_0	=	0x00b0
+                           0000B1   219 _P3_1	=	0x00b1
+                           0000B2   220 _P3_2	=	0x00b2
+                           0000B3   221 _P3_3	=	0x00b3
+                           0000B4   222 _P3_4	=	0x00b4
+                           0000B5   223 _P3_5	=	0x00b5
+                           0000B6   224 _P3_6	=	0x00b6
+                           0000B7   225 _P3_7	=	0x00b7
+                           0000B0   226 _RXD	=	0x00b0
+                           0000B1   227 _TXD	=	0x00b1
+                           0000B2   228 _INT0	=	0x00b2
+                           0000B3   229 _INT1	=	0x00b3
+                           0000B4   230 _T0	=	0x00b4
+                           0000B5   231 _T1	=	0x00b5
+                           0000B6   232 _WR	=	0x00b6
+                           0000B7   233 _RD	=	0x00b7
+                           0000B8   234 _PX0	=	0x00b8
+                           0000B9   235 _PT0	=	0x00b9
+                           0000BA   236 _PX1	=	0x00ba
+                           0000BB   237 _PT1	=	0x00bb
+                           0000BC   238 _PS	=	0x00bc
+                           0000D0   239 _P	=	0x00d0
+                           0000D1   240 _F1	=	0x00d1
+                           0000D2   241 _OV	=	0x00d2
+                           0000D3   242 _RS0	=	0x00d3
+                           0000D4   243 _RS1	=	0x00d4
+                           0000D5   244 _F0	=	0x00d5
+                           0000D6   245 _AC	=	0x00d6
+                           0000D7   246 _CY	=	0x00d7
+                           0000AD   247 _ET2	=	0x00ad
+                           0000BD   248 _PT2	=	0x00bd
+                           0000C8   249 _T2CON_0	=	0x00c8
+                           0000C9   250 _T2CON_1	=	0x00c9
+                           0000CA   251 _T2CON_2	=	0x00ca
+                           0000CB   252 _T2CON_3	=	0x00cb
+                           0000CC   253 _T2CON_4	=	0x00cc
+                           0000CD   254 _T2CON_5	=	0x00cd
+                           0000CE   255 _T2CON_6	=	0x00ce
+                           0000CF   256 _T2CON_7	=	0x00cf
+                           0000C8   257 _CP_RL2	=	0x00c8
+                           0000C9   258 _C_T2	=	0x00c9
+                           0000CA   259 _TR2	=	0x00ca
+                           0000CB   260 _EXEN2	=	0x00cb
+                           0000CC   261 _TCLK	=	0x00cc
+                           0000CD   262 _RCLK	=	0x00cd
+                           0000CE   263 _EXF2	=	0x00ce
+                           0000CF   264 _TF2	=	0x00cf
+                                    265 ;--------------------------------------------------------
+                                    266 ; overlayable register banks
+                                    267 ;--------------------------------------------------------
+                                    268 	.area REG_BANK_0	(REL,OVR,DATA)
+      000000                        269 	.ds 8
+                                    270 ;--------------------------------------------------------
+                                    271 ; internal ram data
+                                    272 ;--------------------------------------------------------
+                                    273 	.area DSEG    (DATA)
+                                    274 ;--------------------------------------------------------
+                                    275 ; overlayable items in internal ram
+                                    276 ;--------------------------------------------------------
+                                    277 	.area	OSEG    (OVR,DATA)
+                                    278 	.area	OSEG    (OVR,DATA)
+                                    279 ;--------------------------------------------------------
+                                    280 ; indirectly addressable internal ram data
+                                    281 ;--------------------------------------------------------
+                                    282 	.area ISEG    (DATA)
+                                    283 ;--------------------------------------------------------
+                                    284 ; absolute internal ram data
+                                    285 ;--------------------------------------------------------
+                                    286 	.area IABS    (ABS,DATA)
+                                    287 	.area IABS    (ABS,DATA)
+                                    288 ;--------------------------------------------------------
+                                    289 ; bit data
+                                    290 ;--------------------------------------------------------
+                                    291 	.area BSEG    (BIT)
+                                    292 ;--------------------------------------------------------
+                                    293 ; paged external ram data
+                                    294 ;--------------------------------------------------------
+                                    295 	.area PSEG    (PAG,XDATA)
+                                    296 ;--------------------------------------------------------
+                                    297 ; external ram data
+                                    298 ;--------------------------------------------------------
+                                    299 	.area XSEG    (XDATA)
+                                    300 ;--------------------------------------------------------
+                                    301 ; absolute external ram data
+                                    302 ;--------------------------------------------------------
+                                    303 	.area XABS    (ABS,XDATA)
+                                    304 ;--------------------------------------------------------
+                                    305 ; external initialized ram data
+                                    306 ;--------------------------------------------------------
+                                    307 	.area XISEG   (XDATA)
+                                    308 	.area HOME    (CODE)
+                                    309 	.area GSINIT0 (CODE)
+                                    310 	.area GSINIT1 (CODE)
+                                    311 	.area GSINIT2 (CODE)
+                                    312 	.area GSINIT3 (CODE)
+                                    313 	.area GSINIT4 (CODE)
+                                    314 	.area GSINIT5 (CODE)
+                                    315 	.area GSINIT  (CODE)
+                                    316 	.area GSFINAL (CODE)
+                                    317 	.area CSEG    (CODE)
+                                    318 ;--------------------------------------------------------
+                                    319 ; global & static initialisations
+                                    320 ;--------------------------------------------------------
+                                    321 	.area HOME    (CODE)
+                                    322 	.area GSINIT  (CODE)
+                                    323 	.area GSFINAL (CODE)
+                                    324 	.area GSINIT  (CODE)
+                                    325 ;--------------------------------------------------------
+                                    326 ; Home
+                                    327 ;--------------------------------------------------------
+                                    328 	.area HOME    (CODE)
+                                    329 	.area HOME    (CODE)
+                                    330 ;--------------------------------------------------------
+                                    331 ; code
+                                    332 ;--------------------------------------------------------
+                                    333 	.area CSEG    (CODE)
+                                    334 ;------------------------------------------------------------
+                                    335 ;Allocation info for local variables in function 'delay_ms'
+                                    336 ;------------------------------------------------------------
+                                    337 ;t                         Allocated to registers r6 r7 
+                                    338 ;i                         Allocated to registers r4 r5 
+                                    339 ;j                         Allocated to registers r2 r3 
+                                    340 ;------------------------------------------------------------
+                                    341 ;	ds18b20.c:5: void delay_ms(unsigned int t)
+                                    342 ;	-----------------------------------------
+                                    343 ;	 function delay_ms
+                                    344 ;	-----------------------------------------
+      000000                        345 _delay_ms:
+                           000007   346 	ar7 = 0x07
+                           000006   347 	ar6 = 0x06
+                           000005   348 	ar5 = 0x05
+                           000004   349 	ar4 = 0x04
+                           000003   350 	ar3 = 0x03
+                           000002   351 	ar2 = 0x02
+                           000001   352 	ar1 = 0x01
+                           000000   353 	ar0 = 0x00
+      000000 AE 82            [24]  354 	mov	r6,dpl
+      000002 AF 83            [24]  355 	mov	r7,dph
+                                    356 ;	ds18b20.c:8: for(i = 0; i < t; i++)
+      000004 7C 00            [12]  357 	mov	r4,#0x00
+      000006 7D 00            [12]  358 	mov	r5,#0x00
+      000008                        359 00107$:
+      000008 C3               [12]  360 	clr	c
+      000009 EC               [12]  361 	mov	a,r4
+      00000A 9E               [12]  362 	subb	a,r6
+      00000B ED               [12]  363 	mov	a,r5
+      00000C 9F               [12]  364 	subb	a,r7
+      00000D 50 14            [24]  365 	jnc	00109$
+                                    366 ;	ds18b20.c:9: for(j = 0; j < 125; j++);
+      00000F 7A 7D            [12]  367 	mov	r2,#0x7d
+      000011 7B 00            [12]  368 	mov	r3,#0x00
+      000013                        369 00105$:
+      000013 1A               [12]  370 	dec	r2
+      000014 BA FF 01         [24]  371 	cjne	r2,#0xff,00130$
+      000017 1B               [12]  372 	dec	r3
+      000018                        373 00130$:
+      000018 EA               [12]  374 	mov	a,r2
+      000019 4B               [12]  375 	orl	a,r3
+      00001A 70 F7            [24]  376 	jnz	00105$
+                                    377 ;	ds18b20.c:8: for(i = 0; i < t; i++)
+      00001C 0C               [12]  378 	inc	r4
+      00001D BC 00 E8         [24]  379 	cjne	r4,#0x00,00107$
+      000020 0D               [12]  380 	inc	r5
+      000021 80 E5            [24]  381 	sjmp	00107$
+      000023                        382 00109$:
+                                    383 ;	ds18b20.c:10: }
+      000023 22               [24]  384 	ret
+                                    385 ;------------------------------------------------------------
+                                    386 ;Allocation info for local variables in function 'delay_us_DS18B20'
+                                    387 ;------------------------------------------------------------
+                                    388 ;t                         Allocated to registers 
+                                    389 ;------------------------------------------------------------
+                                    390 ;	ds18b20.c:12: void delay_us_DS18B20(unsigned char t)
+                                    391 ;	-----------------------------------------
+                                    392 ;	 function delay_us_DS18B20
+                                    393 ;	-----------------------------------------
+      000024                        394 _delay_us_DS18B20:
+      000024 AF 82            [24]  395 	mov	r7,dpl
+                                    396 ;	ds18b20.c:14: while(t--);
+      000026                        397 00101$:
+      000026 8F 06            [24]  398 	mov	ar6,r7
+      000028 1F               [12]  399 	dec	r7
+      000029 EE               [12]  400 	mov	a,r6
+      00002A 70 FA            [24]  401 	jnz	00101$
+                                    402 ;	ds18b20.c:15: }
+      00002C 22               [24]  403 	ret
+                                    404 ;------------------------------------------------------------
+                                    405 ;Allocation info for local variables in function 'Init_DS18B20'
+                                    406 ;------------------------------------------------------------
+                                    407 ;	ds18b20.c:17: void Init_DS18B20()
+                                    408 ;	-----------------------------------------
+                                    409 ;	 function Init_DS18B20
+                                    410 ;	-----------------------------------------
+      00002D                        411 _Init_DS18B20:
+                                    412 ;	ds18b20.c:19: DQ = 1;
+                                    413 ;	assignBit
+      00002D D2 B7            [12]  414 	setb	_P3_7
+                                    415 ;	ds18b20.c:20: delay_us_DS18B20(10);
+      00002F 75 82 0A         [24]  416 	mov	dpl,#0x0a
+      000032 12r00r24         [24]  417 	lcall	_delay_us_DS18B20
+                                    418 ;	ds18b20.c:21: DQ = 0;					//Reset pulse ...
+                                    419 ;	assignBit
+      000035 C2 B7            [12]  420 	clr	_P3_7
+                                    421 ;	ds18b20.c:22: delay_us_DS18B20(150); 	//for a minimum period. See the datasheet.
+      000037 75 82 96         [24]  422 	mov	dpl,#0x96
+      00003A 12r00r24         [24]  423 	lcall	_delay_us_DS18B20
+                                    424 ;	ds18b20.c:23: DQ = 1;					//Rising edge
+                                    425 ;	assignBit
+      00003D D2 B7            [12]  426 	setb	_P3_7
+                                    427 ;	ds18b20.c:24: delay_us_DS18B20(20);   //Wait for the DS18B20 to response
+      00003F 75 82 14         [24]  428 	mov	dpl,#0x14
+                                    429 ;	ds18b20.c:25: }
+      000042 02r00r24         [24]  430 	ljmp	_delay_us_DS18B20
+                                    431 ;------------------------------------------------------------
+                                    432 ;Allocation info for local variables in function 'ReadByteFromScratchpad'
+                                    433 ;------------------------------------------------------------
+                                    434 ;i                         Allocated to registers r6 
+                                    435 ;byte                      Allocated to registers r7 
+                                    436 ;------------------------------------------------------------
+                                    437 ;	ds18b20.c:27: unsigned char ReadByteFromScratchpad()
+                                    438 ;	-----------------------------------------
+                                    439 ;	 function ReadByteFromScratchpad
+                                    440 ;	-----------------------------------------
+      000045                        441 _ReadByteFromScratchpad:
+                                    442 ;	ds18b20.c:30: unsigned char byte = 0;
+      000045 7F 00            [12]  443 	mov	r7,#0x00
+                                    444 ;	ds18b20.c:31: for (i = 8; i > 0; i--){
+      000047 7E 08            [12]  445 	mov	r6,#0x08
+      000049                        446 00104$:
+                                    447 ;	ds18b20.c:32: DQ = 0;
+                                    448 ;	assignBit
+      000049 C2 B7            [12]  449 	clr	_P3_7
+                                    450 ;	ds18b20.c:33: byte >>= 1;
+      00004B EF               [12]  451 	mov	a,r7
+      00004C C3               [12]  452 	clr	c
+      00004D 13               [12]  453 	rrc	a
+      00004E FF               [12]  454 	mov	r7,a
+                                    455 ;	ds18b20.c:34: DQ = 1;			//The master bus releases the 1-Wire bus
+                                    456 ;	assignBit
+      00004F D2 B7            [12]  457 	setb	_P3_7
+                                    458 ;	ds18b20.c:35: if(DQ)			//Read 1? Otherwise, Read 0
+      000051 30 B7 03         [24]  459 	jnb	_P3_7,00102$
+                                    460 ;	ds18b20.c:36: byte |= 0x80;
+      000054 43 07 80         [24]  461 	orl	ar7,#0x80
+      000057                        462 00102$:
+                                    463 ;	ds18b20.c:37: delay_us_DS18B20(20);
+      000057 75 82 14         [24]  464 	mov	dpl,#0x14
+      00005A C0 07            [24]  465 	push	ar7
+      00005C C0 06            [24]  466 	push	ar6
+      00005E 12r00r24         [24]  467 	lcall	_delay_us_DS18B20
+      000061 D0 06            [24]  468 	pop	ar6
+      000063 D0 07            [24]  469 	pop	ar7
+                                    470 ;	ds18b20.c:31: for (i = 8; i > 0; i--){
+      000065 DE E2            [24]  471 	djnz	r6,00104$
+                                    472 ;	ds18b20.c:39: return(byte);
+      000067 8F 82            [24]  473 	mov	dpl,r7
+                                    474 ;	ds18b20.c:40: }
+      000069 22               [24]  475 	ret
+                                    476 ;------------------------------------------------------------
+                                    477 ;Allocation info for local variables in function 'WriteByteToScratchpad'
+                                    478 ;------------------------------------------------------------
+                                    479 ;byte                      Allocated to registers r7 
+                                    480 ;i                         Allocated to registers r6 
+                                    481 ;------------------------------------------------------------
+                                    482 ;	ds18b20.c:42: void WriteByteToScratchpad(unsigned char byte)
+                                    483 ;	-----------------------------------------
+                                    484 ;	 function WriteByteToScratchpad
+                                    485 ;	-----------------------------------------
+      00006A                        486 _WriteByteToScratchpad:
+      00006A AF 82            [24]  487 	mov	r7,dpl
+                                    488 ;	ds18b20.c:45: for (i = 8; i > 0; i--){
+      00006C 7E 08            [12]  489 	mov	r6,#0x08
+      00006E                        490 00105$:
+                                    491 ;	ds18b20.c:46: DQ = 0;
+                                    492 ;	assignBit
+      00006E C2 B7            [12]  493 	clr	_P3_7
+                                    494 ;	ds18b20.c:47: DQ = byte&0x01;
+      000070 EF               [12]  495 	mov	a,r7
+      000071 54 01            [12]  496 	anl	a,#0x01
+                                    497 ;	assignBit
+      000073 24 FF            [12]  498 	add	a,#0xff
+      000075 92 B7            [24]  499 	mov	_P3_7,c
+                                    500 ;	ds18b20.c:48: if(DQ)						//Write 1
+      000077 30 B7 10         [24]  501 	jnb	_P3_7,00102$
+                                    502 ;	ds18b20.c:49: delay_us_DS18B20(3);
+      00007A 75 82 03         [24]  503 	mov	dpl,#0x03
+      00007D C0 07            [24]  504 	push	ar7
+      00007F C0 06            [24]  505 	push	ar6
+      000081 12r00r24         [24]  506 	lcall	_delay_us_DS18B20
+      000084 D0 06            [24]  507 	pop	ar6
+      000086 D0 07            [24]  508 	pop	ar7
+      000088 80 0E            [24]  509 	sjmp	00103$
+      00008A                        510 00102$:
+                                    511 ;	ds18b20.c:51: delay_us_DS18B20(20);
+      00008A 75 82 14         [24]  512 	mov	dpl,#0x14
+      00008D C0 07            [24]  513 	push	ar7
+      00008F C0 06            [24]  514 	push	ar6
+      000091 12r00r24         [24]  515 	lcall	_delay_us_DS18B20
+      000094 D0 06            [24]  516 	pop	ar6
+      000096 D0 07            [24]  517 	pop	ar7
+      000098                        518 00103$:
+                                    519 ;	ds18b20.c:52: DQ = 1;	  					//The master bus releases the 1-Wire bus
+                                    520 ;	assignBit
+      000098 D2 B7            [12]  521 	setb	_P3_7
+                                    522 ;	ds18b20.c:53: byte >>= 1;
+      00009A EF               [12]  523 	mov	a,r7
+      00009B C3               [12]  524 	clr	c
+      00009C 13               [12]  525 	rrc	a
+      00009D FF               [12]  526 	mov	r7,a
+                                    527 ;	ds18b20.c:45: for (i = 8; i > 0; i--){
+      00009E DE CE            [24]  528 	djnz	r6,00105$
+                                    529 ;	ds18b20.c:55: }
+      0000A0 22               [24]  530 	ret
+                                    531 ;------------------------------------------------------------
+                                    532 ;Allocation info for local variables in function 'ReadTemperature'
+                                    533 ;------------------------------------------------------------
+                                    534 ;Byte0                     Allocated to registers r7 
+                                    535 ;Byte1                     Allocated to registers r6 
+                                    536 ;------------------------------------------------------------
+                                    537 ;	ds18b20.c:57: unsigned char ReadTemperature()
+                                    538 ;	-----------------------------------------
+                                    539 ;	 function ReadTemperature
+                                    540 ;	-----------------------------------------
+      0000A1                        541 _ReadTemperature:
+                                    542 ;	ds18b20.c:62: Init_DS18B20();				   	//DS18B20 initialization
+      0000A1 12r00r2D         [24]  543 	lcall	_Init_DS18B20
+                                    544 ;	ds18b20.c:63: WriteByteToScratchpad(0xCC);	//The master issues Skip ROM [CCh] command
+      0000A4 75 82 CC         [24]  545 	mov	dpl,#0xcc
+      0000A7 12r00r6A         [24]  546 	lcall	_WriteByteToScratchpad
+                                    547 ;	ds18b20.c:64: WriteByteToScratchpad(0x44);	//Convert T [44h] command. To initiate a temp measurement and A-to-D conversion.
+      0000AA 75 82 44         [24]  548 	mov	dpl,#0x44
+      0000AD 12r00r6A         [24]  549 	lcall	_WriteByteToScratchpad
+                                    550 ;	ds18b20.c:65: delay_us_DS18B20(10);
+      0000B0 75 82 0A         [24]  551 	mov	dpl,#0x0a
+      0000B3 12r00r24         [24]  552 	lcall	_delay_us_DS18B20
+                                    553 ;	ds18b20.c:67: Init_DS18B20();					//DS18B20 initialization
+      0000B6 12r00r2D         [24]  554 	lcall	_Init_DS18B20
+                                    555 ;	ds18b20.c:68: WriteByteToScratchpad(0xCC);	//The master issues Skip ROM [CCh] command
+      0000B9 75 82 CC         [24]  556 	mov	dpl,#0xcc
+      0000BC 12r00r6A         [24]  557 	lcall	_WriteByteToScratchpad
+                                    558 ;	ds18b20.c:69: WriteByteToScratchpad(0xBE);	//Read temp value. Read Scratpad [BEh] command.
+      0000BF 75 82 BE         [24]  559 	mov	dpl,#0xbe
+      0000C2 12r00r6A         [24]  560 	lcall	_WriteByteToScratchpad
+                                    561 ;	ds18b20.c:70: delay_us_DS18B20(10);
+      0000C5 75 82 0A         [24]  562 	mov	dpl,#0x0a
+      0000C8 12r00r24         [24]  563 	lcall	_delay_us_DS18B20
+                                    564 ;	ds18b20.c:71: Byte0=ReadByteFromScratchpad();	//Read Byte0 of the Scratchpad (low byte of the temp value)
+      0000CB 12r00r45         [24]  565 	lcall	_ReadByteFromScratchpad
+      0000CE AF 82            [24]  566 	mov	r7,dpl
+                                    567 ;	ds18b20.c:72: Byte1=ReadByteFromScratchpad();	//Read Byte1 of the Scratchpad (high byte of the temp value)
+      0000D0 C0 07            [24]  568 	push	ar7
+      0000D2 12r00r45         [24]  569 	lcall	_ReadByteFromScratchpad
+      0000D5 AE 82            [24]  570 	mov	r6,dpl
+      0000D7 D0 07            [24]  571 	pop	ar7
+                                    572 ;	ds18b20.c:74: return ((Byte1*256+Byte0)>>4);	//Calculate the temp value from Byte0 & Byte1. Then save it to the temp variable.
+      0000D9 8E 05            [24]  573 	mov	ar5,r6
+      0000DB E4               [12]  574 	clr	a
+      0000DC FE               [12]  575 	mov	r6,a
+      0000DD FC               [12]  576 	mov	r4,a
+      0000DE EF               [12]  577 	mov	a,r7
+      0000DF 2E               [12]  578 	add	a,r6
+      0000E0 FE               [12]  579 	mov	r6,a
+      0000E1 EC               [12]  580 	mov	a,r4
+      0000E2 3D               [12]  581 	addc	a,r5
+      0000E3 C4               [12]  582 	swap	a
+      0000E4 CE               [12]  583 	xch	a,r6
+      0000E5 C4               [12]  584 	swap	a
+      0000E6 54 0F            [12]  585 	anl	a,#0x0f
+      0000E8 6E               [12]  586 	xrl	a,r6
+      0000E9 CE               [12]  587 	xch	a,r6
+      0000EA 54 0F            [12]  588 	anl	a,#0x0f
+      0000EC CE               [12]  589 	xch	a,r6
+      0000ED 6E               [12]  590 	xrl	a,r6
+      0000EE CE               [12]  591 	xch	a,r6
+      0000EF 30 E3 02         [24]  592 	jnb	acc.3,00103$
+      0000F2 44 F0            [12]  593 	orl	a,#0xf0
+      0000F4                        594 00103$:
+      0000F4 8E 82            [24]  595 	mov	dpl,r6
+                                    596 ;	ds18b20.c:75: }
+      0000F6 22               [24]  597 	ret
+                                    598 	.area CSEG    (CODE)
+                                    599 	.area CONST   (CODE)
+                                    600 	.area XINIT   (CODE)
+                                    601 	.area CABS    (ABS,CODE)
